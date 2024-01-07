@@ -1,0 +1,19 @@
+{
+  "name": "tic_tac_toe_minimax_multiplayer",
+  "version": "1.0.0",
+  "description": "this is a tic tac toe game coded in Node.js, where players can play against the PC which uses the minimax alfa beta prouning algorithm to play, multiplayer (many players to PC) is also added using sockets. ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "start-prod": "node app.js"
+  },
+  "author": "Florian Saqipi",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
