@@ -7,7 +7,6 @@ router.get("/test", (req, res, next) => {
 })
 
 router.get("/", (req, res, next) => {
-    console.log(req.body);
     res.send("<h1>Test!</h1>")
 })
 
