@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link >
-    <title>Tic_Tac_Toe</title>
     <link rel="stylesheet" href="style_landing.css">
+    <title>Tic_Tac_Toe</title>
 </head>
 <body>
-    
-    <div class="landing-container">
-        <h1>TIC TAC TOE</h1>
 
-        <div class="options">
-            <h2>Choose Your Symbol:</h2>
-            <div class="symbol-choice" data-symbol="X">X</div>
-            <div class="symbol-choice" data-symbol="O">O</div>
-            <input type="radio" id="symbolX" name="symbol" value="X" hidden>
-            <input type="radio" id="symbolO" name="symbol" value="O" hidden>
+    <form action="" method="post">
+        <div class="landing-container">
+            <h1>TIC TAC TOE</h1>
+
+            <div class="options">
+                <h2>Choose Your Symbol:</h2>
+                <div class="symbol-choice" data-symbol="X">X</div>
+                <div class="symbol-choice" data-symbol="O">O</div>
+                <input type="radio" id="symbolX" name="symbol" value="X" hidden>
+                <input type="radio" id="symbolO" name="symbol" value="O" hidden>
+            </div>
+
+            <div class="options custom-select">
+                <h2>Who Plays First:</h2>
+                <select name="whoPlaysFirst">
+                    <option value="Player">Player</option>
+                    <option value="Computer">Computer</option>
+                </select>
+            </div>
+
+            <button id="startGame" ><a href="index.html" style="text-decoration: none;">Start Game</a></button>
         </div>
-
-        <div class="options custom-select">
-            <h2>Who Plays First:</h2>
-            <select>
-                <option value="Player">Player</option>
-                <option value="Computer">Computer</option>
-            </select>
-        </div>
-
-        <button id="startGame" ><a href="index.html" style="text-decoration: none;">Start Game</a></button>
-    </div>
+    </form>
 
     <script src="landing.js"></script>
 </body>
