@@ -1,16 +1,19 @@
-const express = require("express")
+const path = require('path');
+const express = require("express");
 
-const playerRoutes = require("./routes/player")
+const playerRoutes = require("./routes/player");
+
+const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(playerRoutes);  
 
 app.use((req, res, next) => {
-    console.log(req.body)
-    res.status(404).send("<h1>Page not found!</h1>");
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 })
 
-app.listen(3000)
+app.listen(3000);
