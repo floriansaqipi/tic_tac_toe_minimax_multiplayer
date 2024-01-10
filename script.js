@@ -3,6 +3,9 @@ let boxes = document.querySelectorAll(".box");
 let turn = "X";
 let isGameOver = false;
 
+let emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e.id);
+
+
 boxes.forEach(e =>{
     e.innerHTML = ""
     e.addEventListener("click", ()=>{
@@ -11,6 +14,7 @@ boxes.forEach(e =>{
             cheakWin();
             cheakDraw();
             changeTurn();
+            updateEmptyPositions();
         }
     })
 })
@@ -81,3 +85,31 @@ document.querySelector("#play-again").addEventListener("click", ()=>{
         e.style.color = "#fff"
     })
 })
+
+function playPc(){
+    if(isGameOver){
+        return
+    }
+    let randomIndex = randomEmptyPostionIndex();
+    console.log(randomIndex)
+    if(randomIndex === -1) {
+        return
+    }
+    boxes[randomIndex].innerHTML = turn;
+    cheakWin();
+    cheakDraw();
+    changeTurn();
+    updateEmptyPositions();
+}
+
+function updateEmptyPositions(){
+    emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e.id);
+}
+
+function randomEmptyPostionIndex(){
+    if (!(emptyPostions.length > 0)){
+        return -1;
+    }
+    let randomIdIndex = Math.floor(Math.random() * emptyPostions.length) 
+    return emptyPostions[randomIdIndex];
+}
