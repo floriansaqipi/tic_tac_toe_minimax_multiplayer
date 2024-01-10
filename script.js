@@ -5,9 +5,6 @@ let isGameOver = false;
 
 let emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e.id);
 
-if(isPc){
-    playPc();
-}
 
 boxes.forEach(e =>{
     e.innerHTML = ""
