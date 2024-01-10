@@ -7,7 +7,7 @@ let emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e
 
 
 boxes.forEach(e =>{
-    e.innerHTML = ""
+   
     e.addEventListener("click", ()=>{
         if(!isGameOver && e.innerHTML === ""){
             e.innerHTML = turn;
