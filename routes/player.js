@@ -5,12 +5,12 @@ const router = express.Router();
 const rootDir = require('../util/path');
 
 router.get("/", (req, res, next) => {
-  res.sendFile(path.join(rootDir, 'views', 'index_landing.html'));
-})
+  res.render('index_landing');
+});
 
 router.get("/index", (req, res, next) => {
-  res.sendFile(path.join(rootDir,'views', 'index.html'));
-})
+  res.render('index');
+});
 
 router.post('/', (req, res,next) => {
     
