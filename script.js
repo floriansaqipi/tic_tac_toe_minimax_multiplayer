@@ -5,6 +5,10 @@ let isGameOver = false;
 
 let emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e.id);
 
+if(isPc){
+    playPc();
+}
+
 boxes.forEach(e =>{
     e.innerHTML = ""
     e.addEventListener("click", ()=>{
@@ -84,6 +88,22 @@ document.querySelector("#play-again").addEventListener("click", ()=>{
         e.style.color = "#fff"
     })
 })
+
+function playPc(){
+    if(isGameOver){
+        return
+    }
+    let randomIndex = randomEmptyPostionIndex();
+    console.log(randomIndex)
+    if(randomIndex === -1) {
+        return
+    }
+    boxes[randomIndex].innerHTML = turn;
+    cheakWin();
+    cheakDraw();
+    changeTurn();
+    updateEmptyPositions();
+}
 
 function updateEmptyPositions(){
     emptyPostions = Array.from(boxes).filter(e => e.innerHTML === "").map(e => e.id);
