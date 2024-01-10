@@ -1,13 +1,15 @@
+const path = require('path');
 const express = require("express");
-
 const router = express.Router();
 
-router.get("/test", (req, res, next) => {
-    res.send("<h1>sample</h1>")
-})
+const rootDir = require('../util/path');
 
 router.get("/", (req, res, next) => {
-    res.send("<h1>Test!</h1>")
+  res.sendFile(path.join(rootDir, 'views', 'index_landing.html'));
+})
+
+router.get("/index", (req, res, next) => {
+  res.sendFile(path.join(rootDir,'views', 'index.html'));
 })
 
 router.post('/', (req, res,next) => {
