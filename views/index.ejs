@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <%- include('partials/head.ejs'); %>
+<%- include('includes/head.ejs') %>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -14,15 +11,9 @@
             <div class="bg"></div>
         </div>
         <div class="main-grid">
-            <div class="box align" id="0"></div>
-            <div class="box align" id="1"></div>
-            <div class="box align" id="2"></div>
-            <div class="box align" id="3"></div>
-            <div class="box align" id="4"></div>
-            <div class="box align" id="5"></div>
-            <div class="box align" id="6"></div>
-            <div class="box align" id="7"></div>
-            <div class="box align" id="8"></div>
+            <% for (let i = 0; i < 9; i++) { %>
+                <div class="box align" id="<%= i %>"></div>
+            <% } %>
         </div>
         <h2 id="results"></h2>
         <div class="buttons">
@@ -31,5 +22,4 @@
         </div>
     </div>
     <script src="/js/script.js"></script>
-</body>
-</html>
+    <%- include('includes/end.ejs') %>
