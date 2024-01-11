@@ -1,8 +1,7 @@
 let boxes = document.querySelectorAll(".box");
 
-let turn = "X";
-
-let isPc = true;
+let turn = symbol;
+let isPc = isPcTurn;
 
 let isGameOver = false;
 
