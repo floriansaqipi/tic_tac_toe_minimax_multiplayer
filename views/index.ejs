@@ -15,15 +15,19 @@
                 <div class="box align" id="<%= i %>"></div>
             <% } %>
         </div>
-        <h2 id="results"></h2>
+        <!--<h2 id="results"></h2>-->
+        <div class="endgame">
+            <div class="text"></div>
+        </div>
         <div class="buttons">
-            <button id="play-again">Play Again</button>
+            <button id="play-again" onclick="startGame()">Play Again</button>
             <button id="go-back" ><a href="/" style="text-decoration: none;">Go Back</a></button>
         </div>
     </div>
     <script>
         var symbol= <%- JSON.stringify(symbolOfPlayer) %> ;
+        var symbol1= <%- JSON.stringify(symbolOfPlayer1) %> ;
         var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
     </script>
-    <script src="/js/script.js"></script>
+    <script src="/js/script1.js"></script>
     <%- include('includes/end.ejs') %>
