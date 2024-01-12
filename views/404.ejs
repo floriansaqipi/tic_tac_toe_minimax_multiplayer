@@ -1,23 +1,19 @@
 <%- include('includes/head.ejs') %>
-
+<link rel="stylesheet" href="/css/404design.css">
 </head>
 <style>
 
-    body {
-        font-family: 'Arial',sans-serif;
-        text-align:center;
-        padding:50px;
-    }
-    h1 {
-        color:#d9534f
-    }
-
-    p {
-        color:#777
-    }
 </style>
 <body>
-    <h1>Page Not found</h1>
-    <p>Sorry the page that you are looking doesn't exist</p>
+    <div id = "notfound">
+        <div class = "notfound">
+            <div class = "notfound-404">
+           <h1>404</h1>
+           <h2>Page not found</h2>
+            </div>
+          <a href="/">HomePage</a>
+        </div>
+
+    </div>
 
     <%- include('includes/end.ejs') %>
