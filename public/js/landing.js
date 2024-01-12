@@ -17,14 +17,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-////////store the player's name in local storage
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('startGame').addEventListener('click', function () {
-        var playerName = document.getElementById('playerName').value;
-
-        // Store the player's name in local storage
-        localStorage.setItem('playerName', playerName);
-    });
-});

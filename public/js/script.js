@@ -117,13 +117,3 @@ function randomEmptyPostionIndex() {
     let randomIdIndex = Math.floor(Math.random() * emptyPostions.length)
     return emptyPostions[randomIdIndex];
 }
-
-//////retrieve the player's name from local storage
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve the player's name from local storage
-    var playerName = localStorage.getItem('playerName') || 'DefaultPlayer';
-
-    // Display the player's name
-    document.getElementById('playerNameDisplay').innerText = 'Player: ' + playerName;
-});
