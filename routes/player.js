@@ -16,6 +16,7 @@ router.post('/', (req, res,next) => {
     
   const symbol = req.body.symbol;
   const whoPlaysFirst = req.body.whoPlaysFirst;
+  const playerName = req.body.playerName;
 
   let isPcFirst=whoPlaysFirst==='Computer';
   let symbol1='';
@@ -29,7 +30,8 @@ router.post('/', (req, res,next) => {
       symbolOfPlayer:symbol,
       symbolOfPlayer1:symbol1,
       whoPlaysFirst:whoPlaysFirst,
-      isPcTurn:isPcFirst
+      isPcTurn:isPcFirst,
+      playerName:playerName
      });
 });
 
