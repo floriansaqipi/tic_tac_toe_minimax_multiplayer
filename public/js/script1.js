@@ -114,7 +114,15 @@ function checkTie() {
 }
 
 function evaluateBoard(board, player) {
-   //todo
+    if (checkWin(board, huPlayer)) {
+        return -10;
+    } else if (checkWin(board, aiPlayer)) {
+        return 10;
+    } else if (emptySquares(board).length === 0) {
+        return 0;
+    }
+	
+    return 0;
 }
 
 
