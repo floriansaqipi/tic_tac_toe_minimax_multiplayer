@@ -113,3 +113,8 @@ body {
     background-color: #08D9D6;
     color: #000;
 }
+
+.player-name-display{
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
