@@ -125,7 +125,38 @@ function evaluateBoard(board, player) {
     return 0;
 }
 
-
 function minimax(newBoard, player) {
-  //todo
+    var availSpots = emptySquares(newBoard);
+
+    if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
+        return { score: evaluateBoard(newBoard, aiPlayer) };
+    }
+
+    var moves = [];
+	
+    for (var i = 0; i < availSpots.length; i++) {
+        var move = {};
+        move.index = newBoard[availSpots[i]];
+        newBoard[availSpots[i]] = player;
+
+        var result = minimax(newBoard, player === aiPlayer ? huPlayer : aiPlayer);
+        move.score = result.score;
+
+        newBoard[availSpots[i]] = move.index;
+
+        moves.push(move);
+    }
+
+    var bestMove;
+
+    var bestScore = player === aiPlayer ? -Infinity : Infinity;
+
+    for (var i = 0; i < moves.length; i++) {
+        if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
+            bestScore = moves[i].score;
+            bestMove = i;
+        }
+    }
+
+    return moves[bestMove];
 }
