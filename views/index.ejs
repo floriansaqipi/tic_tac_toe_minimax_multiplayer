@@ -10,17 +10,17 @@
 
             <div class="options">
                 <h2>Choose Your Symbol:</h2>
-                <div class="symbol-choice selected" data-symbol="X">X</div>
-                <div class="symbol-choice" data-symbol="O">O</div>
-                <input type="radio" id="symbolX" name="symbol" value="X" hidden checked>
-                <input type="radio" id="symbolO" name="symbol" value="O" hidden>
+                <div class="symbol-choice <%= oldInput.symbol === 'X' || oldInput.symbol === '' ? "selected" : "" %>" data-symbol="X">X</div>
+                <div class="symbol-choice <%= oldInput.symbol === 'O' ? "selected" : "" %>" data-symbol="O">O</div>
+                <input type="radio" id="symbolX" name="symbol" value="X" hidden <%= oldInput.symbol === 'X' || oldInput.symbol === '' ? "checked" : "" %> >
+                <input type="radio" id="symbolO" name="symbol" value="O" hidden <%= oldInput.symbol === 'O' ? "checked" : "" %>>
             </div>
 
             <div class="options custom-select">
                 <h2>Who Plays First:</h2>
                 <select name="whoPlaysFirst">
-                    <option value="Player">Player</option>
-                    <option value="Computer">Computer</option>
+                    <option value="Player" <%= oldInput.whoPlaysFirst === 'Player' || oldInput.whoPlaysFirst === '' ? "selected" : "" %>>Player</option>
+                    <option value="Computer" <%= oldInput.whoPlaysFirst === 'Computer' ? "selected" : "" %>>Computer</option>
                 </select>
             </div>
             <% if(errorMessage){ %>
