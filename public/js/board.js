@@ -59,6 +59,7 @@ function turn(squareId, player) {
 	if (gameWon) gameOver(gameWon)
 }
 
+
 function checkWin(board, player) {
 	let plays = board.reduce((a, e, i) =>
 		(e === player) ? a.concat(i) : a, []);
@@ -96,7 +97,7 @@ function emptySquares() {
 }
 
 function bestSpot() {
-	return minimax(origBoard, aiPlayer).index;
+	return minimax(origBoard,0, aiPlayer).index;
 }
 
 function checkTie() {
@@ -113,11 +114,11 @@ function checkTie() {
 	return false;
 }
 
-function evaluateBoard(board, player) {
+function evaluateBoard(board,depth, player) {
     if (checkWin(board, huPlayer)) {
-        return -10;
+        return -20+depth;
     } else if (checkWin(board, aiPlayer)) {
-        return 10;
+        return 20-depth;
     } else if (emptySquares(board).length === 0) {
         return 0;
     }
@@ -125,11 +126,12 @@ function evaluateBoard(board, player) {
     return 0;
 }
 
-function minimax(newBoard, player) {
+
+function minimax(newBoard,depth, player) {
     var availSpots = emptySquares(newBoard);
 
     if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
-        return { score: evaluateBoard(newBoard, aiPlayer) };
+        return { score: evaluateBoard(newBoard,depth, aiPlayer) };
     }
 
     var moves = [];
@@ -139,7 +141,7 @@ function minimax(newBoard, player) {
         move.index = newBoard[availSpots[i]];
         newBoard[availSpots[i]] = player;
 
-        var result = minimax(newBoard, player === aiPlayer ? huPlayer : aiPlayer);
+        var result = minimax(newBoard,depth+1, player === aiPlayer ? huPlayer : aiPlayer);
         move.score = result.score;
 
         newBoard[availSpots[i]] = move.index;
@@ -154,7 +156,7 @@ function minimax(newBoard, player) {
     for (var i = 0; i < moves.length; i++) {
         if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
             bestScore = moves[i].score;
-            bestMove = i;
+            bestMove=i;
         }
     }
 
