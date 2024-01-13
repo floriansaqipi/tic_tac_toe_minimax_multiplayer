@@ -5,30 +5,30 @@ const router = express.Router();
 const rootDir = require('../util/path');
 
 router.get("/", (req, res, next) => {
-  res.sendFile(path.join(rootDir, 'views', 'index_landing.html'));
-})
+  res.render('index');
+});
 
-router.get("/index", (req, res, next) => {
-  res.sendFile(path.join(rootDir,'views', 'index.html'));
-})
-
-router.post('/', (req, res,next) => {
+router.post('/board', (req, res,next) => {
     
-    const symbol = req.body.symbol;
-    const whoPlaysFirst = req.body.whoPlaysFirst;
+  const symbol = req.body.symbol;
+  const whoPlaysFirst = req.body.whoPlaysFirst;
+  const playerName = req.body.playerName;
 
-     if (symbol === 'X' && whoPlaysFirst === 'Player') {
-      res.render('index', { mode: 'Player', symbol: 'X' });
-    } else if (symbol === 'O' && whoPlaysFirst === 'Player') {
-      res.render('index', { mode: 'Player', symbol: 'O' });
-    } else if (symbol === 'X' && whoPlaysFirst === 'Computer') {
-      res.render('index', { mode: 'Computer', symbol: 'X' });
-    } else if (symbol === 'O' && whoPlaysFirst === 'Computer') {
-      res.render('index', { mode: 'Computer', symbol: 'O' });
-    } else {
-        
-      res.send('Invalid input');
-    }
-  });
+  let isPcFirst=whoPlaysFirst==='Computer';
+  let symbol1='';
+  if(symbol==="X"){
+
+    symbol1='O';
+  }else{
+    symbol1='X';
+  }
+    res.render('board', {
+      symbolOfPlayer:symbol,
+      symbolOfPlayer1:symbol1,
+      whoPlaysFirst:whoPlaysFirst,
+      isPcTurn:isPcFirst,
+      playerName:playerName
+     });
+});
 
 module.exports = router
