@@ -143,3 +143,7 @@ font-size: 1rem;
     color: red;
     font-size: 1.2rem;
 }
+
+.error_input {
+    border-color: red !important;
+}
