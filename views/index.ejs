@@ -23,9 +23,19 @@
                     <option value="Computer">Computer</option>
                 </select>
             </div>
+            <% if(errorMessage){ %>
+                <div class="error_statement">
+                    <%= errorMessage %>
+                </div>
+            <% } %>
+             
             <div class="player_name">
 
-                <input type="text" id="playerName" name="playerName" class="custom-input" placeholder="Enter your name">
+                <input type="text" id="playerName" name="playerName" 
+                    class="custom-input <%= validationErrors.find(e => e.path === 'playerName') ? 'error_input' : '' %>"
+                    placeholder="Enter your name"
+                    value="<%= oldInput.playerName %>"
+                    >
                 </div>
                 <br>
 

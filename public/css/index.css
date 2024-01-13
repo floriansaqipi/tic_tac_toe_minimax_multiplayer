@@ -137,3 +137,13 @@ opacity: 0.4;
 font-size: 1rem;
 
 }
+
+.error_statement{
+    margin-bottom: 24px;
+    color: red;
+    font-size: 1.2rem;
+}
+
+.error_input {
+    border-color: red !important;
+}
