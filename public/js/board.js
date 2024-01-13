@@ -21,8 +21,8 @@ startGame();
 
 
 function startGame() {
-    document.querySelector("#play-again").style.display = "none";
-    document.querySelector("#go-back").style.display = "none";
+    document.querySelector("#play-again").style.display = "inline";
+    document.querySelector("#go-back").style.display = "inline";
     document.querySelector(".endgame").style.display = "none";
     
     origBoard = Array.from(Array(9).keys());
@@ -55,10 +55,15 @@ function turnClick(square) {
 function turn(squareId, player) {
 	origBoard[squareId] = player;
 	document.getElementById(squareId).innerText = player;
+    updateTurnDisplay(player);
 	let gameWon = checkWin(origBoard, player)
 	if (gameWon) gameOver(gameWon)
 }
 
+function updateTurnDisplay(currentPlayer) {
+    const turnBox = document.querySelector(".bg");
+    turnBox.style.left = (currentPlayer === "X") ? "0" : "85px";
+}
 
 function checkWin(board, player) {
 	let plays = board.reduce((a, e, i) =>
@@ -77,12 +82,12 @@ function checkWin(board, player) {
 function gameOver(gameWon) {
 	for (let index of winCombos[gameWon.index]) {
 		document.getElementById(index).style.backgroundColor =
-			gameWon.player == huPlayer ? "blue" : "red";
+			gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
 	}
 	for (var i = 0; i < cells.length; i++) {
 		cells[i].removeEventListener('click', turnClick, false);
 	}
-	declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose.");
+	declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose!");
     document.querySelector("#play-again").style.display = "inline"
     document.querySelector("#go-back").style.display = "inline"
 }
@@ -103,7 +108,7 @@ function bestSpot() {
 function checkTie() {
 	if (emptySquares().length == 0) {
 		for (var i = 0; i < cells.length; i++) {
-			cells[i].style.backgroundColor = "green";
+			cells[i].style.backgroundColor = "none";
 			cells[i].removeEventListener('click', turnClick, false);
 		}
 		declareWinner("Tie Game!")
