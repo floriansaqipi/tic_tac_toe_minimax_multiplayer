@@ -1,5 +1,8 @@
 const path = require('path');
 const express = require("express");
+const { check } = require('express-validator')
+const { validationResult } = require('express-validator/check')
+
 const router = express.Router();
 
 const rootDir = require('../util/path');
@@ -8,7 +11,7 @@ router.get("/", (req, res, next) => {
   res.render('index');
 });
 
-router.post('/board', (req, res,next) => {
+router.post('/board', check('playerName') ,(req, res,next) => {
     
   const symbol = req.body.symbol;
   const whoPlaysFirst = req.body.whoPlaysFirst;
@@ -22,6 +25,12 @@ router.post('/board', (req, res,next) => {
   }else{
     symbol1='X';
   }
+
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    return res.render('index', { errorMessage : errors.array()})
+  }
+
     res.render('board', {
       symbolOfPlayer:symbol,
       symbolOfPlayer1:symbol1,
