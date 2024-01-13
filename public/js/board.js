@@ -97,7 +97,7 @@ function emptySquares() {
 }
 
 function bestSpot() {
-	return minimax(origBoard,0, aiPlayer).index;
+	return minimax(origBoard,0,-10000, 10000, aiPlayer).index;
 }
 
 function checkTie() {
@@ -127,7 +127,7 @@ function evaluateBoard(board,depth, player) {
 }
 
 
-function minimax(newBoard,depth, player) {
+function minimax(newBoard,depth,alpha,beta ,player) {
     var availSpots = emptySquares(newBoard);
 
     if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
@@ -141,12 +141,21 @@ function minimax(newBoard,depth, player) {
         move.index = newBoard[availSpots[i]];
         newBoard[availSpots[i]] = player;
 
-        var result = minimax(newBoard,depth+1, player === aiPlayer ? huPlayer : aiPlayer);
+        var result = minimax(newBoard,depth+1,alpha,beta, player === aiPlayer ? huPlayer : aiPlayer);
         move.score = result.score;
 
         newBoard[availSpots[i]] = move.index;
 
         moves.push(move);
+        if (player === aiPlayer) {
+            alpha = Math.max(alpha, move.score);
+        } else {
+            beta = Math.min(beta, move.score);
+        }
+
+        if (alpha >= beta) {
+            break; 
+        }
     }
 
     var bestMove;
