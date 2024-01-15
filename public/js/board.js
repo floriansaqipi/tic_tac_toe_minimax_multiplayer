@@ -35,7 +35,7 @@ function startGame() {
     
     if (isPc) {
         
-        turn(bestSpot(), aiPlayer);
+        setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
     }
 }
 
@@ -43,7 +43,7 @@ function turnClick(square) {
      if (typeof origBoard[square.target.id] == 'number') {
             turn(square.target.id, huPlayer);
             if (!checkWin(origBoard, huPlayer) && !checkTie()) {
-                turn(bestSpot(), aiPlayer);
+                setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
 				checkTie();
                
             }
@@ -55,14 +55,20 @@ function turnClick(square) {
 function turn(squareId, player) {
 	origBoard[squareId] = player;
 	document.getElementById(squareId).innerText = player;
-    updateTurnDisplay(player);
+    changeTurn(player);
 	let gameWon = checkWin(origBoard, player)
 	if (gameWon) gameOver(gameWon)
 }
 
-function updateTurnDisplay(currentPlayer) {
-    const turnBox = document.querySelector(".bg");
-    turnBox.style.left = (currentPlayer === "X") ? "0" : "85px";
+function changeTurn(player) {
+    if (player==="X") {
+        
+        document.querySelector(".bg").style.left = "85px";
+        
+    } else if(player==="O") {
+       
+        document.querySelector(".bg").style.left = "0";
+    }
 }
 
 function checkWin(board, player) {
