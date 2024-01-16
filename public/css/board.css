@@ -52,7 +52,6 @@ body {
 .bg {
     position: absolute;
     bottom: 0;
-    /* left: 0; */
     width: 85px;
     height: 40px;
     background-color: #FF2E63;
