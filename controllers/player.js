@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 exports.getPlayerPage = (req, res, next) => {
   res.render('index', {
@@ -12,11 +12,7 @@ exports.getPlayerPage = (req, res, next) => {
   });
 };
 
-exports.postPlayerBoard = [
-  check('playerName')
-    .isLength({ min: 3 })
-    .withMessage('Player name must be 3 or more characters'),
-  (req, res, next) => {
+exports.postPlayerBoard = (req, res, next) => {
     const symbol = req.body.symbol;
     const whoPlaysFirst = req.body.whoPlaysFirst;
     const playerName = req.body.playerName;
@@ -44,5 +40,4 @@ exports.postPlayerBoard = [
       isPcTurn: isPcFirst,
       playerName: playerName
     });
-  }
-];
+}
