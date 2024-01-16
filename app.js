@@ -2,6 +2,7 @@ const path = require("path")
 const express = require("express")
 
 const playerRoutes = require("./routes/player")
+const algorithm = require("./algorithm/minmax")
 
 const bodyParser = require("body-parser")
 
@@ -24,13 +25,11 @@ const server = app.listen(3000)
 const io = require("socket.io")(server)
 io.on("connection", (socket) => {
   console.log(socket.id)
-  socket.on("turn-played", (message, room) => {
-    console.log(message)
-    if (room === "") {
-      socket.emit("receive-message", message) //sends to all
-      // socket.broadcast.emit('receive-message', "Hello from server public")   //sends to all except the one who sent it
-    } else {
-      socket.to(room).emit("receive-message", "Hello from server private ") //sends exactly to the one who sent it
-    }
+  socket.on("get-best-move", (gameState, room) => {
+    console.log(gameState)
+    console.log("--------------")
+    console.log(room)
+    algorithm.initalizeGameState(gameState)
+    io.to(room).emit("send-move", "testMove")
   })
 })
