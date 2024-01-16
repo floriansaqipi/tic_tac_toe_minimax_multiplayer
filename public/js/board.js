@@ -53,6 +53,12 @@ function turnClick(square) {
      if (typeof origBoard[square.target.id] == 'number') {
             turn(square.target.id, huPlayer);
             if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+                socket.emit("get-best-move", {
+                  origBoard: origBoard,
+                  isPc: isPc,
+                  huPlayer: huPlayer,
+                  aiPlayer: aiPlayer,
+                },socket.id)
                 setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
 				checkTie();
                
@@ -72,12 +78,7 @@ function turn(squareId, player) {
     } else {
         checkTie();
     }
-  socket.emit("turn-played", {
-    origBoard: origBoard,
-    isPc: isPc,
-    huPlayer: huPlayer,
-    aiPlayer: aiPlayer,
-  })
+  
 }
 
 function changeTurn(player) {
