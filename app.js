@@ -2,7 +2,7 @@ const path = require("path")
 const express = require("express")
 
 const playerRoutes = require("./routes/player")
-const algorithm = require("./algorithm/minmax")
+const algorithm = require("./algorithm/minimax")
 
 const bodyParser = require("body-parser")
 
@@ -18,7 +18,7 @@ app.use(playerRoutes)
 
 app.use((req, res, next) => {
   res.status(404).render("404")
-})
+})  
 
 const server = app.listen(3000)
 
@@ -30,6 +30,6 @@ io.on("connection", (socket) => {
     console.log("--------------")
     console.log(room)
     algorithm.initalizeGameState(gameState)
-    io.to(room).emit("send-move", "testMove")
+    io.to(room).emit("send-move", algorithm.bestSpot())
   })
 })

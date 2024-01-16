@@ -62,3 +62,48 @@ function checkWin(board, player) {
 function emptySquares() {
   return origBoard.filter((s) => typeof s == "number")
 }
+
+function minimax(newBoard,depth,alpha,beta ,player) {
+  var availSpots = emptySquares(newBoard);
+
+  if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
+      return { score: evaluateBoard(newBoard,depth, aiPlayer) };
+  }
+
+  var moves = [];
+
+  for (var i = 0; i < availSpots.length; i++) {
+      var move = {};
+      move.index = newBoard[availSpots[i]];
+      newBoard[availSpots[i]] = player;
+
+      var result = minimax(newBoard,depth+1,alpha,beta, player === aiPlayer ? huPlayer : aiPlayer);
+      move.score = result.score;
+
+      newBoard[availSpots[i]] = move.index;
+
+      moves.push(move);
+      if (player === aiPlayer) {
+          alpha = Math.max(alpha, move.score);
+      } else {
+          beta = Math.min(beta, move.score);
+      }
+
+      if (alpha >= beta) {
+          break; 
+      }
+  }
+
+  var bestMove;
+
+  var bestScore = player === aiPlayer ? -Infinity : Infinity;
+
+  for (var i = 0; i < moves.length; i++) {
+      if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
+          bestScore = moves[i].score;
+          bestMove=i;
+      }
+  }
+
+  return moves[bestMove];
+}
