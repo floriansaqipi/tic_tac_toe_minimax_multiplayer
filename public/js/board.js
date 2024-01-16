@@ -164,4 +164,3 @@ function checkTie() {
     }
     return false;
 }
-}
