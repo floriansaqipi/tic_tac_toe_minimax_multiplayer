@@ -1,12 +1,6 @@
+
 const socket = io()
 
-socket.on("connect", () => {
-    console.log("U connected with id: ", socket.id)
-})
-
-socket.on("receive-message", (message) => {
-    console.log(message)
-})
 const bg = document.querySelector(".bg");
 const playAgain = document.querySelector("#play-again");
 const goBack = document.querySelector("#go-back");
@@ -23,6 +17,23 @@ if (isPc) {
 } else {
     firstPlayer = huPlayer;
 }
+
+socket.on("connect", () => {
+    console.log("You connected with id: ", socket.id)
+    if (isPc) {
+      socket.emit("get-best-move", {
+          origBoard: origBoard,
+          isPc: isPc,
+          huPlayer: huPlayer,
+          aiPlayer: aiPlayer,
+        }, socket.id)   
+  }
+  socket.on("send-move", bestMoveIndex => {
+    console.log(bestMoveIndex);
+    setTimeout(() => { turn(bestMoveIndex, aiPlayer); }, 500);
+})
+  })
+
 
 const winCombos = [
     [0, 1, 2],
@@ -59,23 +70,21 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-
-    if (isPc) {
-
-        setTimeout(() => { turn(bestSpot(), aiPlayer); }, 1000);
-    }
 }
 
 function turnClick(square) {
     if (typeof origBoard[square.target.id] == 'number') {
-        turn(square.target.id, huPlayer);
-        if (!checkWin(origBoard, huPlayer) && !checkTie()) {
-            setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
-            checkTie();
-
+           turn(square.target.id, huPlayer);
+           if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+               socket.emit("get-best-move", {
+                   origBoard: origBoard,
+                   isPc: isPc,
+                   huPlayer: huPlayer,
+                   aiPlayer: aiPlayer,
+                 }, socket.id)
+               checkTie();
+           }
         }
-    }
-
 }
 
 
@@ -90,12 +99,6 @@ function turn(squareId, player) {
     } else {
         checkTie();
     }
-    socket.emit("turn-played", {
-        origBoard: origBoard,
-        isPc: isPc,
-        huPlayer: huPlayer,
-        aiPlayer: aiPlayer,
-    })
 }
 
 function changeTurn(player) {
@@ -148,10 +151,6 @@ function emptySquares() {
     return origBoard.filter(s => typeof s == 'number');
 }
 
-function bestSpot() {
-    return minimax(origBoard, 0, -10000, 10000, aiPlayer).index;
-}
-
 function checkTie() {
     if (emptySquares().length == 0) {
         for (var i = 0; i < cells.length; i++) {
@@ -165,61 +164,4 @@ function checkTie() {
     }
     return false;
 }
-
-function evaluateBoard(board,depth, player) {
-    if (checkWin(board, huPlayer)) {
-        return -20+depth;
-    } else if (checkWin(board, aiPlayer)) {
-        return 20-depth;
-    } else if (emptySquares(board).length === 0) {
-        return 0;
-    }
-	
-    return 0;
-}
-
-
-function minimax(newBoard,depth,alpha,beta ,player) {
-    var availSpots = emptySquares(newBoard);
-
-    if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
-        return { score: evaluateBoard(newBoard,depth, aiPlayer) };
-    }
-
-    var moves = [];
-	
-    for (var i = 0; i < availSpots.length; i++) {
-        var move = {};
-        move.index = newBoard[availSpots[i]];
-        newBoard[availSpots[i]] = player;
-
-        var result = minimax(newBoard,depth+1,alpha,beta, player === aiPlayer ? huPlayer : aiPlayer);
-        move.score = result.score;
-
-        newBoard[availSpots[i]] = move.index;
-
-        moves.push(move);
-        if (player === aiPlayer) {
-            alpha = Math.max(alpha, move.score);
-        } else {
-            beta = Math.min(beta, move.score);
-        }
-
-        if (alpha >= beta) {
-            break; 
-        }
-    }
-
-    var bestMove;
-
-    var bestScore = player === aiPlayer ? -Infinity : Infinity;
-
-    for (var i = 0; i < moves.length; i++) {
-        if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
-            bestScore = moves[i].score;
-            bestMove=i;
-        }
-    }
-
-    return moves[bestMove];
 }
