@@ -11,7 +11,7 @@
             <div class="bg"></div>
         </div>
 
-        <h2 id="playerNameDisplay" class="player-name-display">Player: <%= playerName %></h2>
+        <h2 id="playerNameDisplay" class="player-name-display"><%= playerName %>'s turn</h2>
 
         <div class="main-grid">
             <% for (let i = 0; i < 9; i++) { %>
@@ -29,6 +29,7 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        var playerName = <%- JSON.stringify(playerName) %> ;
         var symbol= <%- JSON.stringify(symbolOfPlayer) %> ;
         var symbol1= <%- JSON.stringify(symbolOfPlayer1) %> ;
         var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
