@@ -34,8 +34,8 @@ exports.postPlayerBoard = (req, res, next) => {
     let symbol1 = symbol === "X" ? 'O' : 'X';
 
     res.render('board', {
-      symbolOfPlayer: symbol,
-      symbolOfPlayer1: symbol1,
+      humanPlayer: symbol,
+      aiPlayer: symbol1,
       whoPlaysFirst: whoPlaysFirst,
       isPcTurn: isPcFirst,
       playerName: playerName

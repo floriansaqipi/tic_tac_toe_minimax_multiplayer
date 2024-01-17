@@ -9,21 +9,18 @@ const cells = document.querySelectorAll('.box');
 const currentTurnText = document.querySelector("#playerNameDisplay");
 
 var origBoard;
-let isPc = isPcTurn;
+let isPcFirst = isPcTurn;
 let isFirstGame = true;
 
-huPlayer = symbol;
-aiPlayer = symbol1;
-firstPlayer = "";
-if (isPc) {
-    firstPlayer = aiPlayer;
-} else {
-    firstPlayer = huPlayer;
-}
+huPlayer = humanSymbol;
+aiPlayer = aiSymbol;
+
+firstPlayer = isPcFirst ? aiPlayer : huPlayer;
+
 
 socket.on("connect", () => {
     console.log("You connected with id: ", socket.id)
-    if (isPc) {
+    if (isPcFirst) {
       sendGetBestMoveToSocket()   
   }
   socket.on("send-move", bestMoveIndex => {
@@ -58,7 +55,7 @@ function changeFirstTime(player) {
 function startGame() {
     changeFirstTime(firstPlayer);
 
-    currentTurnText.innerHTML = isPc ? "AI's Turn" : playerName + "'s turn";
+    currentTurnText.innerHTML = isPcFirst ? "AI's Turn" : playerName + "'s turn";
 
     playAgain.style.display = "inline";
     goBack.style.display = "inline";
@@ -70,7 +67,7 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-    if(isPc && !isFirstGame){
+    if(isPcFirst && !isFirstGame){
             sendGetBestMoveToSocket();
         }
 }
@@ -182,7 +179,7 @@ function checkTie() {
 function sendGetBestMoveToSocket(){
     socket.emit("get-best-move", {
         origBoard: origBoard,
-        isPc: isPc,
+        isPcFirst: isPcFirst,
         huPlayer: huPlayer,
         aiPlayer: aiPlayer,
       }, socket.id)
