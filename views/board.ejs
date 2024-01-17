@@ -28,6 +28,7 @@
                 <a id="go-back" href="/" style="text-decoration: none;">Go Back</a>
             </div>
         </div>
+    </section>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var playerName = <%- JSON.stringify(playerName) %> ;
@@ -35,6 +36,7 @@
             var aiSymbol= <%- JSON.stringify(aiPlayer) %> ;
             var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
         </script>
-    </section>
+    
+
     <script src="/js/board.js"></script>
     <%- include('includes/end.ejs') %>

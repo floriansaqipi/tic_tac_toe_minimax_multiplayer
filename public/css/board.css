@@ -117,7 +117,6 @@ body {
     margin: 0 10px;
 }
 
-
 #go-back{
     padding: 10px 33px;
 }
@@ -152,9 +151,11 @@ body {
 .endgame{
     font-size: 1.6rem;
     margin-bottom: 20px; 
+
 }
 
 .buttons{
     display: flex;
     justify-content: center;
+
 }
