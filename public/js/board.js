@@ -6,6 +6,8 @@ const playAgain = document.querySelector("#play-again");
 const goBack = document.querySelector("#go-back");
 const endGame = document.querySelector(".endgame");
 const cells = document.querySelectorAll('.box');
+const currentTurnText = document.querySelector("#playerNameDisplay");
+
 var origBoard;
 let isPc = isPcTurn;
 let isFirstGame = true;
@@ -56,6 +58,8 @@ function changeFirstTime(player) {
 function startGame() {
     changeFirstTime(firstPlayer);
 
+    currentTurnText.innerHTML = isPc ? "AI's Turn" : playerName + "'s turn";
+
     playAgain.style.display = "inline";
     goBack.style.display = "inline";
     endGame.style.display = "none";
@@ -70,6 +74,8 @@ function startGame() {
             sendGetBestMoveToSocket();
         }
 }
+
+
 
 function turnClick(square) {
     if (typeof origBoard[square.target.id] == 'number') {
@@ -87,6 +93,7 @@ function turn(squareId, player) {
     origBoard[squareId] = player;
     document.getElementById(squareId).innerText = player;
     changeTurn(player);
+    changeDisplayText(player);
     let gameWon = checkWin(origBoard, player)
     if (gameWon) {
         gameOver(gameWon);
@@ -106,6 +113,19 @@ function changeTurn(player) {
     }
     else {
         changeFirstTime(player)
+    }
+}
+
+function changeDisplayText(player) {
+    if(checkWin(origBoard, player) || checkTie()){
+        currentTurnText.innerHTML = "Game Over!"
+        return
+    }
+    if (player === aiPlayer) {
+        currentTurnText.innerHTML = playerName + "'s Turn"
+    }
+    else {
+        currentTurnText.innerHTML = "AI's Turn"
     }
 }
 
