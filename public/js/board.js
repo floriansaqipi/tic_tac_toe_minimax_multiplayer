@@ -5,28 +5,23 @@ const playAgain = document.querySelector("#play-again");
 const goBack = document.querySelector("#go-back");
 const endGame = document.querySelector(".endgame");
 const cells = document.querySelectorAll('.box');
-var origBoard;
-let isPc = isPcTurn;
-let isFirstGame = true;
+const currentTurnText = document.querySelector("#playerNameDisplay");
 
+var origBoard;
+let isPcFirst = isPcTurn;
+let isFirstGame = true;
 let playerTurn=true;
 
+huPlayer = humanSymbol;
+aiPlayer = aiSymbol;
 
-huPlayer = symbol;
-aiPlayer = symbol1;
-firstPlayer = "";
-if (isPc) {
-    firstPlayer = aiPlayer;
-    playerTurn=false;
-} else {
-    firstPlayer = huPlayer;
-    playerTurn=true;
-}
+firstPlayer = isPcFirst ? aiPlayer : huPlayer;
+playerTurn = !isPc ;
 
 socket.on("connect", () => {
     console.log("You connected with id: ", socket.id)
-    if (isPc) {
-      sendGetBestMoveToSocket()  
+    if (isPcFirst) {
+      sendGetBestMoveToSocket()   
   }
   socket.on("send-move", bestMoveIndex => {
     console.log(bestMoveIndex);
@@ -60,6 +55,8 @@ function changeFirstTime(player) {
 function startGame() {
     changeFirstTime(firstPlayer);
 
+    currentTurnText.innerHTML = isPcFirst ? "AI's Turn" : playerName + "'s turn";
+
     playAgain.style.display = "inline";
     goBack.style.display = "inline";
     endGame.style.display = "none";
@@ -75,6 +72,8 @@ function startGame() {
             playerTurn=false;
         }
 }
+
+
 
 function turnClick(square) {
     if (playerTurn&&typeof origBoard[square.target.id] == 'number') {
@@ -95,6 +94,7 @@ function turn(squareId, player) {
     origBoard[squareId] = player;
     document.getElementById(squareId).innerText = player;
     changeTurn(player);
+    changeDisplayText(player);
     let gameWon = checkWin(origBoard, player)
     if (gameWon) {
         gameOver(gameWon);
@@ -115,6 +115,19 @@ function changeTurn(player) {
     }
     else {
         changeFirstTime(player)
+    }
+}
+
+function changeDisplayText(player) {
+    if(checkWin(origBoard, player) || checkTie()){
+        currentTurnText.innerHTML = "Game Over!"
+        return
+    }
+    if (player === aiPlayer) {
+        currentTurnText.innerHTML = playerName + "'s Turn"
+    }
+    else {
+        currentTurnText.innerHTML = "AI's Turn"
     }
 }
 
@@ -171,7 +184,7 @@ function checkTie() {
 function sendGetBestMoveToSocket(){
     socket.emit("get-best-move", {
         origBoard: origBoard,
-        isPc: isPc,
+        isPcFirst: isPcFirst,
         huPlayer: huPlayer,
         aiPlayer: aiPlayer,
       }, socket.id)

@@ -11,7 +11,7 @@
             <div class="bg"></div>
         </div>
 
-        <h2 id="playerNameDisplay" class="player-name-display">Player: <%= playerName %></h2>
+        <h2 id="playerNameDisplay" class="player-name-display"><%= playerName %>'s turn</h2>
 
         <div class="main-grid">
             <% for (let i = 0; i < 9; i++) { %>
@@ -24,13 +24,14 @@
         </div>
         <div class="buttons">
             <button id="play-again" onclick="startGame()">Play Again</button>
-            <button id="go-back" ><a href="/" style="text-decoration: none;">Go Back</a></button>
+            <a id="go-back" href="/" style="text-decoration: none;">Go Back</a>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var symbol= <%- JSON.stringify(symbolOfPlayer) %> ;
-        var symbol1= <%- JSON.stringify(symbolOfPlayer1) %> ;
+        var playerName = <%- JSON.stringify(playerName) %> ;
+        var humanSymbol= <%- JSON.stringify(humanPlayer) %> ;
+        var aiSymbol= <%- JSON.stringify(aiPlayer) %> ;
         var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
     </script>
     <script src="/js/board.js"></script>

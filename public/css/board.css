@@ -91,7 +91,8 @@ body {
 }
 
 #play-again,
-#go-back {
+#go-back
+ {
     background-color: #FF2E63;
     padding: 10px 25px;
     border: none;
@@ -103,6 +104,12 @@ body {
     transition: all 0.3s ease;
     margin: 0 10px;
 }
+
+#go-back{
+      padding: 10px 33px;
+}
+
+
 
 #play-again:hover,
 #go-back:hover {
@@ -118,3 +125,7 @@ body {
     margin-bottom: 15px;
 }
 
+.endgame{
+    font-size: 1.6rem;
+    margin-bottom: 20px; 
+}
