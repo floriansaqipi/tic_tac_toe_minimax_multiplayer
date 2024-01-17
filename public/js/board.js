@@ -1,4 +1,3 @@
-
 const socket = io()
 
 const bg = document.querySelector(".bg");
@@ -11,12 +10,13 @@ const currentTurnText = document.querySelector("#playerNameDisplay");
 var origBoard;
 let isPcFirst = isPcTurn;
 let isFirstGame = true;
+let playerTurn=true;
 
 huPlayer = humanSymbol;
 aiPlayer = aiSymbol;
 
 firstPlayer = isPcFirst ? aiPlayer : huPlayer;
-
+playerTurn = !isPc ;
 
 socket.on("connect", () => {
     console.log("You connected with id: ", socket.id)
@@ -67,21 +67,25 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-    if(isPcFirst && !isFirstGame){
+    if(isPc && !isFirstGame){
             sendGetBestMoveToSocket();
+            playerTurn=false;
         }
 }
 
 
 
 function turnClick(square) {
-    if (typeof origBoard[square.target.id] == 'number') {
+    if (playerTurn&&typeof origBoard[square.target.id] == 'number') {
            turn(square.target.id, huPlayer);
            if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+               playerTurn=false;
                sendGetBestMoveToSocket();
                checkTie();
            }
+         
         }
+       
 }
 
 
@@ -97,6 +101,7 @@ function turn(squareId, player) {
     } else {
         checkTie();
     }
+    playerTurn = true;
 }
 
 function changeTurn(player) {
