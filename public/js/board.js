@@ -1,4 +1,3 @@
-
 const socket = io()
 
 const bg = document.querySelector(".bg");
@@ -8,25 +7,26 @@ const endGame = document.querySelector(".endgame");
 const cells = document.querySelectorAll('.box');
 var origBoard;
 let isPc = isPcTurn;
+let isFirstGame = true;
+
+let playerTurn=true;
+
 
 huPlayer = symbol;
 aiPlayer = symbol1;
 firstPlayer = "";
 if (isPc) {
     firstPlayer = aiPlayer;
+    playerTurn=false;
 } else {
     firstPlayer = huPlayer;
+    playerTurn=true;
 }
 
 socket.on("connect", () => {
     console.log("You connected with id: ", socket.id)
     if (isPc) {
-      socket.emit("get-best-move", {
-          origBoard: origBoard,
-          isPc: isPc,
-          huPlayer: huPlayer,
-          aiPlayer: aiPlayer,
-        }, socket.id)   
+      sendGetBestMoveToSocket()  
   }
   socket.on("send-move", bestMoveIndex => {
     console.log(bestMoveIndex);
@@ -70,21 +70,23 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
+    if(isPc && !isFirstGame){
+            sendGetBestMoveToSocket();
+            playerTurn=false;
+        }
 }
 
 function turnClick(square) {
-    if (typeof origBoard[square.target.id] == 'number') {
+    if (playerTurn&&typeof origBoard[square.target.id] == 'number') {
            turn(square.target.id, huPlayer);
            if (!checkWin(origBoard, huPlayer) && !checkTie()) {
-               socket.emit("get-best-move", {
-                   origBoard: origBoard,
-                   isPc: isPc,
-                   huPlayer: huPlayer,
-                   aiPlayer: aiPlayer,
-                 }, socket.id)
+               playerTurn=false;
+               sendGetBestMoveToSocket();
                checkTie();
            }
+         
         }
+       
 }
 
 
@@ -99,6 +101,7 @@ function turn(squareId, player) {
     } else {
         checkTie();
     }
+    playerTurn = true;
 }
 
 function changeTurn(player) {
@@ -145,6 +148,7 @@ function gameOver(gameWon) {
 function declareWinner(who) {
     endGame.style.display = "block";
     document.querySelector(".endgame .text").innerText = who;
+    isFirstGame = false;
 }
 
 function emptySquares() {
@@ -159,8 +163,16 @@ function checkTie() {
         }
         declareWinner("Tie Game!")
         bg.style.display = "none";
-
         return true;
     }
     return false;
+}
+
+function sendGetBestMoveToSocket(){
+    socket.emit("get-best-move", {
+        origBoard: origBoard,
+        isPc: isPc,
+        huPlayer: huPlayer,
+        aiPlayer: aiPlayer,
+      }, socket.id)
 }
