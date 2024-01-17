@@ -16,7 +16,7 @@ huPlayer = humanSymbol;
 aiPlayer = aiSymbol;
 
 firstPlayer = isPcFirst ? aiPlayer : huPlayer;
-playerTurn = !isPc ;
+playerTurn = !isPcFirst ;
 
 socket.on("connect", () => {
     console.log("You connected with id: ", socket.id)
@@ -67,7 +67,7 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-    if(isPc && !isFirstGame){
+    if(isPcFirst && !isFirstGame){
             sendGetBestMoveToSocket();
             playerTurn=false;
         }
@@ -184,7 +184,6 @@ function checkTie() {
 function sendGetBestMoveToSocket(){
     socket.emit("get-best-move", {
         origBoard: origBoard,
-        isPcFirst: isPcFirst,
         huPlayer: huPlayer,
         aiPlayer: aiPlayer,
       }, socket.id)

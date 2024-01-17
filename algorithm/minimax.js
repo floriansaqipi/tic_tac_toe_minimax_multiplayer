@@ -12,13 +12,11 @@ const winCombos = [
 let origBoard
 let huPlayer
 let aiPlayer
-let isPc
 
 exports.initalizeGameState = (gameState) => {
   origBoard = gameState.origBoard
   huPlayer = gameState.huPlayer
   aiPlayer = gameState.aiPlayer
-  isPc = gameState.isPc
 }
 
 exports.bestSpot = () => {
@@ -29,8 +27,6 @@ exports.bestSpot = () => {
     huPlayer,
     "AiPlayer: ",
     aiPlayer,
-    "IsPc:",
-    isPc
   )
   return minimax(origBoard, 0, -10000, 10000, aiPlayer).index
 }
