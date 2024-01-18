@@ -70,6 +70,7 @@ function startGame() {
         sendGetBestMoveToSocket();
         playerTurn = false;
     }
+    isFirstGame = false;
 }
 
 function changeFirstTime(player) {

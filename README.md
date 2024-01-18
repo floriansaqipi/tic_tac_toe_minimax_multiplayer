@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a multiplayer Tic Tac Toe game implemented using the Minimax algorithm with Alpha-Beta pruning, for enhanced efficiency. This project is a part of the an assignment of our class Algorithm Design and Analysis. The game allows multiple players to connect to a central server and play against a computer opponent which runs the Minimax algorithm with Alpha-Beta pruning.
+This project is a multiplayer Tic Tac Toe game implemented using the Minimax algorithm with Alpha-Beta pruning, for enhanced efficiency. This project is a part of an assignment of our class Algorithm Design and Analysis. The game allows multiple players to connect to a central server and play against a computer opponent which runs the Minimax algorithm with Alpha-Beta pruning.
 
 ## Development
 
