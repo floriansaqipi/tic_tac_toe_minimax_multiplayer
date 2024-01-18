@@ -1,3 +1,8 @@
+
+let origBoard
+let huPlayer
+let aiPlayer
+
 const winCombos = [
   [0, 1, 2],
   [3, 4, 5],
@@ -9,10 +14,6 @@ const winCombos = [
   [6, 4, 2],
 ]
 
-let origBoard
-let huPlayer
-let aiPlayer
-
 exports.initalizeGameState = (gameState) => {
   origBoard = gameState.origBoard
   huPlayer = gameState.huPlayer
@@ -20,27 +21,26 @@ exports.initalizeGameState = (gameState) => {
 }
 
 exports.bestSpot = () => {
-  console.log(
-    "origBOard: ",
-    origBoard,
-    "HumanPlayer:",
-    huPlayer,
-    "AiPlayer: ",
-    aiPlayer,
-  )
   return minimax(origBoard, 0, -10000, 10000, aiPlayer).index
 }
 
-function evaluateBoard(board, depth, player) {
-  if (checkWin(board, huPlayer)) {
-    return -20 + depth
-  } else if (checkWin(board, aiPlayer)) {
-    return 20 - depth
-  } else if (emptySquares(board).length === 0) {
-    return 0
+
+function minimax(newBoard, depth, alpha, beta, player) {
+  var availSpots = emptySquares(newBoard);
+
+  if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
+    return { score: evaluateBoard(newBoard, depth) };
   }
 
-  return 0
+  var moves = generateMoves(newBoard, depth, alpha, beta, player, availSpots);
+  var bestMove = findBestMove(player, moves);
+
+  return moves[bestMove];
+}
+
+
+function emptySquares() {
+  return origBoard.filter((s) => typeof s == "number")
 }
 
 function checkWin(board, player) {
@@ -55,51 +55,50 @@ function checkWin(board, player) {
   return gameWon
 }
 
-function emptySquares() {
-  return origBoard.filter((s) => typeof s == "number")
+function evaluateBoard(board, depth) {
+  return checkWin(board, huPlayer) ? -20 + depth :
+         checkWin(board, aiPlayer) ? 20 - depth :
+         emptySquares(board).length === 0 ? 0 : 0;
 }
 
-function minimax(newBoard,depth,alpha,beta ,player) {
-  var availSpots = emptySquares(newBoard);
-
-  if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
-      return { score: evaluateBoard(newBoard,depth, aiPlayer) };
-  }
-
+function generateMoves(newBoard, depth, alpha, beta, player, availSpots) {
   var moves = [];
 
   for (var i = 0; i < availSpots.length; i++) {
-      var move = {};
-      move.index = newBoard[availSpots[i]];
-      newBoard[availSpots[i]] = player;
+    var move = {};
+    move.index = newBoard[availSpots[i]];
+    newBoard[availSpots[i]] = player;
 
-      var result = minimax(newBoard,depth+1,alpha,beta, player === aiPlayer ? huPlayer : aiPlayer);
-      move.score = result.score;
+    var result = minimax(newBoard, depth + 1, alpha, beta, player === aiPlayer ? huPlayer : aiPlayer);
+    move.score = result.score;
 
-      newBoard[availSpots[i]] = move.index;
+    newBoard[availSpots[i]] = move.index;
 
-      moves.push(move);
-      if (player === aiPlayer) {
-          alpha = Math.max(alpha, move.score);
-      } else {
-          beta = Math.min(beta, move.score);
-      }
+    moves.push(move);
+    if (player === aiPlayer) {
+      alpha = Math.max(alpha, move.score);
+    } else {
+      beta = Math.min(beta, move.score);
+    }
 
-      if (alpha >= beta) {
-          break; 
-      }
+    if (alpha >= beta) {
+      break;
+    }
   }
 
+  return moves;
+}
+
+function findBestMove(player, moves) {
   var bestMove;
 
   var bestScore = player === aiPlayer ? -Infinity : Infinity;
 
   for (var i = 0; i < moves.length; i++) {
-      if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
-          bestScore = moves[i].score;
-          bestMove=i;
-      }
+    if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
+      bestScore = moves[i].score;
+      bestMove = i;
+    }
   }
-
-  return moves[bestMove];
+  return bestMove;
 }
