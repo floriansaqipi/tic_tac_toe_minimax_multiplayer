@@ -1,4 +1,3 @@
-
 let origBoard
 let huPlayer
 let aiPlayer

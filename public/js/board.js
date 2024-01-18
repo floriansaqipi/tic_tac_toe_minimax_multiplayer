@@ -10,25 +10,7 @@ const currentTurnText = document.querySelector("#playerNameDisplay");
 var origBoard;
 let isPcFirst = isPcTurn;
 let isFirstGame = true;
-let playerTurn=true;
-
-huPlayer = humanSymbol;
-aiPlayer = aiSymbol;
-
-firstPlayer = isPcFirst ? aiPlayer : huPlayer;
-playerTurn = !isPcFirst ;
-
-socket.on("connect", () => {
-    console.log("You connected with id: ", socket.id)
-    if (isPcFirst) {
-      sendGetBestMoveToSocket()   
-  }
-  socket.on("send-move", bestMoveIndex => {
-    console.log(bestMoveIndex);
-    setTimeout(() => { turn(bestMoveIndex, aiPlayer); }, 500);
-})
-  })
-
+let playerTurn = true;
 
 const winCombos = [
     [0, 1, 2],
@@ -41,15 +23,32 @@ const winCombos = [
     [6, 4, 2]
 ]
 
+huPlayer = humanSymbol;
+aiPlayer = aiSymbol;
 
-startGame();
+firstPlayer = isPcFirst ? aiPlayer : huPlayer;
+playerTurn = !isPcFirst;
 
+socket.on("connect", () => {
+    console.log("You connected with id: ", socket.id)
+    if (isPcFirst) {
+        sendGetBestMoveToSocket()
+    }
+    socket.on("send-move", bestMoveIndex => {
+        setTimeout(() => { turn(bestMoveIndex, aiPlayer); }, 500);
+    })
+})
 
-function changeFirstTime(player) {
-    bg.style.display = "block";
-    bg.style.left = (player === "X") ? "0px" : "85px";
+function sendGetBestMoveToSocket() {
+    socket.emit("get-best-move", {
+        origBoard: origBoard,
+        huPlayer: huPlayer,
+        aiPlayer: aiPlayer,
+    }, socket.id)
 }
 
+
+startGame();
 
 
 function startGame() {
@@ -67,34 +66,36 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-    if(isPcFirst && !isFirstGame){
-            sendGetBestMoveToSocket();
-            playerTurn=false;
-        }
+
+    if (isPcFirst && !isFirstGame) {
+        sendGetBestMoveToSocket();
+        playerTurn = false;
+    }
 }
 
-
+function changeFirstTime(player) {
+    bg.style.display = "block";
+    bg.style.left = (player === "X") ? "0px" : "85px";
+}
 
 function turnClick(square) {
-    if (playerTurn&&typeof origBoard[square.target.id] == 'number') {
-           turn(square.target.id, huPlayer);
-           if (!checkWin(origBoard, huPlayer) && !checkTie()) {
-               playerTurn=false;
-               sendGetBestMoveToSocket();
-               checkTie();
-           }
-         
+    if (playerTurn && typeof origBoard[square.target.id] == 'number') {
+        turn(square.target.id, huPlayer);
+        if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+            playerTurn = false;
+            sendGetBestMoveToSocket();
+            checkTie();
         }
-       
+    }
 }
 
-
 function turn(squareId, player) {
-
     origBoard[squareId] = player;
     document.getElementById(squareId).innerText = player;
+
     changeTurn(player);
     changeDisplayText(player);
+
     let gameWon = checkWin(origBoard, player)
     if (gameWon) {
         gameOver(gameWon);
@@ -119,15 +120,10 @@ function changeTurn(player) {
 }
 
 function changeDisplayText(player) {
-    if(checkWin(origBoard, player) || checkTie()){
-        currentTurnText.innerHTML = "Game Over!"
-        return
-    }
-    if (player === aiPlayer) {
-        currentTurnText.innerHTML = playerName + "'s Turn"
-    }
-    else {
-        currentTurnText.innerHTML = "AI's Turn"
+    if (checkWin(origBoard, player) || checkTie()) {
+        currentTurnText.innerHTML = "Game Over!";
+    } else {
+        currentTurnText.innerHTML = player === aiPlayer ? playerName + "'s Turn" : "AI's Turn";
     }
 }
 
@@ -144,11 +140,26 @@ function checkWin(board, player) {
     return gameWon;
 }
 
+function checkTie() {
+    if (emptySquares().length != 0) {
+        return false;
+    }
+    else {
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].style.backgroundColor = "none";
+            cells[i].removeEventListener('click', turnClick, false);
+        }
+        declareWinner("Tie Game!")
+        bg.style.display = "none";
+
+        return true;
+    }
+}
 
 function gameOver(gameWon) {
     for (let index of winCombos[gameWon.index]) {
         document.getElementById(index).style.backgroundColor =
-            gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
+        gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
     }
     for (var i = 0; i < cells.length; i++) {
         cells[i].removeEventListener('click', turnClick, false);
@@ -156,7 +167,6 @@ function gameOver(gameWon) {
     bg.style.display = "none";
     declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose!");
 }
-
 
 function declareWinner(who) {
     endGame.style.display = "block";
@@ -166,25 +176,4 @@ function declareWinner(who) {
 
 function emptySquares() {
     return origBoard.filter(s => typeof s == 'number');
-}
-
-function checkTie() {
-    if (emptySquares().length == 0) {
-        for (var i = 0; i < cells.length; i++) {
-            cells[i].style.backgroundColor = "none";
-            cells[i].removeEventListener('click', turnClick, false);
-        }
-        declareWinner("Tie Game!")
-        bg.style.display = "none";
-        return true;
-    }
-    return false;
-}
-
-function sendGetBestMoveToSocket(){
-    socket.emit("get-best-move", {
-        origBoard: origBoard,
-        huPlayer: huPlayer,
-        aiPlayer: aiPlayer,
-      }, socket.id)
 }
