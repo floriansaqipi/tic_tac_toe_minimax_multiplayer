@@ -4,6 +4,7 @@
     font-family: sans-serif;
     transition: 0.2s ease-in-out;
     user-select: none;
+    box-sizing: border-box;
 }
 
 .align {
@@ -16,9 +17,17 @@ body {
     background-color: #252A34;
     margin: 0;
     padding: 0;
-    width: 100vw;
+}
+
+.main_section{
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding-top: 5vh;
 }
 
 .turn-container {
@@ -73,6 +82,9 @@ body {
     background-color: #1f2833;
 }
 
+
+
+
 .box {
     cursor: pointer;
     font-size: 3rem;
@@ -106,10 +118,21 @@ body {
 }
 
 #go-back{
-      padding: 10px 33px;
+    padding: 10px 33px;
 }
 
 
+@media (max-width: 320px) {
+    .main-grid{
+        height: 300px;
+        width: 300px;
+    }
+    #play-again,
+    #go-back
+    {
+    padding: 8px 16px;
+    }
+}
 
 #play-again:hover,
 #go-back:hover {
@@ -128,4 +151,11 @@ body {
 .endgame{
     font-size: 1.6rem;
     margin-bottom: 20px; 
+
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+
 }
