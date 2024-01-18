@@ -1,12 +1,11 @@
 const path = require("path")
 const express = require("express")
+const app = express()
+const bodyParser = require("body-parser")
 
 const playerRoutes = require("./routes/player")
 const algorithm = require("./algorithm/minimax")
 
-const bodyParser = require("body-parser")
-
-const app = express()
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
@@ -23,12 +22,9 @@ app.use((req, res, next) => {
 const server = app.listen(3000)
 
 const io = require("socket.io")(server)
+
 io.on("connection", (socket) => {
-  console.log(socket.id)
   socket.on("get-best-move", (gameState, room) => {
-    console.log(gameState)
-    console.log("--------------")
-    console.log(room)
     algorithm.initalizeGameState(gameState)
     io.to(room).emit("send-move", algorithm.bestSpot())
   })
