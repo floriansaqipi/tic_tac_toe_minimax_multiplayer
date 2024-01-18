@@ -1,11 +1,11 @@
 const path = require("path")
 const express = require("express")
 const app = express()
+const bodyParser = require("body-parser")
 
 const playerRoutes = require("./routes/player")
 const algorithm = require("./algorithm/minimax")
 
-const bodyParser = require("body-parser")
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
