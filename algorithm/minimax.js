@@ -56,8 +56,8 @@ function checkWin(board, player) {
 
 function evaluateBoard(board, depth) {
   return checkWin(board, huPlayer) ? -20 + depth :
-         checkWin(board, aiPlayer) ? 20 - depth :
-         emptySquares(board).length === 0 ? 0 : 0;
+    checkWin(board, aiPlayer) ? 20 - depth :
+      emptySquares(board).length === 0 ? 0 : 0;
 }
 
 function generateMoves(newBoard, depth, alpha, beta, player, availSpots) {

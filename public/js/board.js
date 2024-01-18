@@ -156,7 +156,7 @@ function checkTie() {
 function gameOver(gameWon) {
     for (let index of winCombos[gameWon.index]) {
         document.getElementById(index).style.backgroundColor =
-        gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
+            gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
     }
     for (var i = 0; i < cells.length; i++) {
         cells[i].removeEventListener('click', turnClick, false);
