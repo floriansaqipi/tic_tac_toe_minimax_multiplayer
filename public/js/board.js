@@ -66,7 +66,6 @@ function startGame() {
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-
     if (isPcFirst && !isFirstGame) {
         sendGetBestMoveToSocket();
         playerTurn = false;
@@ -106,10 +105,8 @@ function turn(squareId, player) {
 }
 
 function changeTurn(player) {
-
     if (player === aiPlayer) {
         bg.style.left = (player === "O") ? "85px" : "0px";
-
         setTimeout(() => {
             bg.style.left = (player === "O") ? "0px" : "85px";
         }, 500);
