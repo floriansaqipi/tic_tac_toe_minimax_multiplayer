@@ -1,47 +1,52 @@
 <%- include('includes/head.ejs') %>
 
     <link rel="stylesheet" href="/css/index.css">
-</head>
-<body>
+    </head>
 
-    <form action="/board" method="post">
-        <div class="landing-container">
-            <h1>TIC TAC TOE</h1>
+    <body>
+        <section class="main_section">
+            <form action="/board" method="post" class="landing-container">
 
-            <div class="options">
-                <h2>Choose Your Symbol:</h2>
-                <div class="symbol-choice <%= oldInput.symbol === 'X' || oldInput.symbol === '' ? "selected" : "" %>" data-symbol="X">X</div>
-                <div class="symbol-choice <%= oldInput.symbol === 'O' ? "selected" : "" %>" data-symbol="O">O</div>
-                <input type="radio" id="symbolX" name="symbol" value="X" hidden <%= oldInput.symbol === 'X' || oldInput.symbol === '' ? "checked" : "" %> >
-                <input type="radio" id="symbolO" name="symbol" value="O" hidden <%= oldInput.symbol === 'O' ? "checked" : "" %>>
-            </div>
+                <h1>TIC TAC TOE</h1>
 
-            <div class="options custom-select">
-                <h2>Who Plays First:</h2>
-                <select name="whoPlaysFirst">
-                    <option value="Player" <%= oldInput.whoPlaysFirst === 'Player' || oldInput.whoPlaysFirst === '' ? "selected" : "" %>>Player</option>
-                    <option value="Computer" <%= oldInput.whoPlaysFirst === 'Computer' ? "selected" : "" %>>Computer</option>
-                </select>
-            </div>
-            <% if(errorMessage){ %>
-                <div class="error_statement">
-                    <%= errorMessage %>
+                <div class="options">
+                    <h2>Choose Your Symbol:</h2>
+                    <div class="symbol-choice <%= oldInput.symbol === 'X' || oldInput.symbol === '' ? " selected" : ""
+                        %>" data-symbol="X">X</div>
+                    <div class="symbol-choice <%= oldInput.symbol === 'O' ? " selected" : "" %>" data-symbol="O">O</div>
+                    <input type="radio" id="symbolX" name="symbol" value="X" hidden <%=oldInput.symbol==='X' ||
+                        oldInput.symbol==='' ? "checked" : "" %> >
+                    <input type="radio" id="symbolO" name="symbol" value="O" hidden <%=oldInput.symbol==='O' ? "checked"
+                        : "" %>>
                 </div>
-            <% } %>
-             
-            <div class="player_name">
 
-                <input type="text" id="playerName" name="playerName" 
-                    class="custom-input <%= validationErrors.find(e => e.path === 'playerName') ? 'error_input' : '' %>"
-                    placeholder="Enter your name"
-                    value="<%= oldInput.playerName %>"
-                    >
+                <div class="options custom-select">
+                    <h2>Who Plays First:</h2>
+                    <select name="whoPlaysFirst">
+                        <option value="Player" <%=oldInput.whoPlaysFirst==='Player' || oldInput.whoPlaysFirst===''
+                            ? "selected" : "" %>>Player</option>
+                        <option value="Computer" <%=oldInput.whoPlaysFirst==='Computer' ? "selected" : "" %>>Computer
+                        </option>
+                    </select>
                 </div>
-                <br>
+                <% if(errorMessage){ %>
+                    <div class="error_statement">
+                        <%= errorMessage %>
+                    </div>
+                    <% } %>
 
-            <button id="startGame" type="submit">Start Game</button>
-        </div>
-    </form>
+                        <div class="player_name">
 
-    <script src="/js/index.js"></script>
-    <%- include('includes/end.ejs') %>
+                            <input type="text" id="playerName" name="playerName"
+                                class="custom-input <%= validationErrors.find(e => e.path === 'playerName') ? 'error_input' : '' %>"
+                                placeholder="Enter your name" value="<%= oldInput.playerName %>">
+                        </div>
+                        <br>
+
+                        <button id="startGame" type="submit">Start Game</button>
+            </form>
+        </section>
+
+
+        <script src="/js/index.js"></script>
+        <%- include('includes/end.ejs') %>

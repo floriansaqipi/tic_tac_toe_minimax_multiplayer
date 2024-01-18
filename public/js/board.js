@@ -1,204 +1,177 @@
 const socket = io()
 
-socket.on("connect", () => {
-  console.log("U connected with id: ", socket.id)
-})
-
-socket.on("receive-message", (message) => {
-  console.log(message)
-})
+const bg = document.querySelector(".bg");
+const playAgain = document.querySelector("#play-again");
+const goBack = document.querySelector("#go-back");
+const endGame = document.querySelector(".endgame");
+const cells = document.querySelectorAll('.box');
+const currentTurnText = document.querySelector("#playerNameDisplay");
 
 var origBoard;
-let isPc = isPcTurn;
-
-huPlayer=symbol;
-aiPlayer=symbol1;
-
+let isPcFirst = isPcTurn;
+let isFirstGame = true;
+let playerTurn = true;
 
 const winCombos = [
-	[0, 1, 2],
-	[3, 4, 5],
-	[6, 7, 8],
-	[0, 3, 6],
-	[1, 4, 7],
-	[2, 5, 8],
-	[0, 4, 8],
-	[6, 4, 2]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [6, 4, 2]
 ]
 
-const cells = document.querySelectorAll('.box');
+huPlayer = humanSymbol;
+aiPlayer = aiSymbol;
+
+firstPlayer = isPcFirst ? aiPlayer : huPlayer;
+playerTurn = !isPcFirst;
+
+socket.on("connect", () => {
+    console.log("You connected with id: ", socket.id)
+    if (isPcFirst) {
+        sendGetBestMoveToSocket()
+    }
+    socket.on("send-move", bestMoveIndex => {
+        setTimeout(() => { turn(bestMoveIndex, aiPlayer); }, 500);
+    })
+})
+
+function sendGetBestMoveToSocket() {
+    socket.emit("get-best-move", {
+        origBoard: origBoard,
+        huPlayer: huPlayer,
+        aiPlayer: aiPlayer,
+    }, socket.id)
+}
+
+
 startGame();
 
 
 function startGame() {
-    document.querySelector("#play-again").style.display = "inline";
-    document.querySelector("#go-back").style.display = "inline";
-    document.querySelector(".endgame").style.display = "none";
-    
+    changeFirstTime(firstPlayer);
+
+    currentTurnText.innerHTML = isPcFirst ? "AI's Turn" : playerName + "'s turn";
+
+    playAgain.style.display = "inline";
+    goBack.style.display = "inline";
+    endGame.style.display = "none";
     origBoard = Array.from(Array(9).keys());
-    
+
     for (var i = 0; i < cells.length; i++) {
         cells[i].innerText = '';
         cells[i].style.removeProperty("background-color");
         cells[i].addEventListener('click', turnClick, false);
     }
-    
-    if (isPc) {
-        
-        setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
+    if (isPcFirst && !isFirstGame) {
+        sendGetBestMoveToSocket();
+        playerTurn = false;
     }
+    isFirstGame = false;
+}
+
+function changeFirstTime(player) {
+    bg.style.display = "block";
+    bg.style.left = (player === "X") ? "0px" : "85px";
 }
 
 function turnClick(square) {
-     if (typeof origBoard[square.target.id] == 'number') {
-            turn(square.target.id, huPlayer);
-            if (!checkWin(origBoard, huPlayer) && !checkTie()) {
-                setTimeout(() => { turn(bestSpot(), aiPlayer); }, 500);
-				checkTie();
-               
-            }
-		 }
-   
+    if (playerTurn && typeof origBoard[square.target.id] == 'number') {
+        turn(square.target.id, huPlayer);
+        if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+            playerTurn = false;
+            sendGetBestMoveToSocket();
+            checkTie();
+        }
+    }
 }
 
-
 function turn(squareId, player) {
-	origBoard[squareId] = player;
-	document.getElementById(squareId).innerText = player;
+    origBoard[squareId] = player;
+    document.getElementById(squareId).innerText = player;
+
     changeTurn(player);
-	let gameWon = checkWin(origBoard, player)
-	if (gameWon) {
+    changeDisplayText(player);
+
+    let gameWon = checkWin(origBoard, player)
+    if (gameWon) {
         gameOver(gameWon);
     } else {
         checkTie();
     }
-  socket.emit("turn-played", {
-    origBoard: origBoard,
-    isPc: isPc,
-    huPlayer: huPlayer,
-    aiPlayer: aiPlayer,
-  })
+    playerTurn = true;
 }
 
 function changeTurn(player) {
-    if (player==="X") {
-        
-        document.querySelector(".bg").style.left = "85px";
-        
-    } else if(player==="O") {
-       
-        document.querySelector(".bg").style.left = "0";
+    if (player === aiPlayer) {
+        bg.style.left = (player === "O") ? "85px" : "0px";
+        setTimeout(() => {
+            bg.style.left = (player === "O") ? "0px" : "85px";
+        }, 500);
+    }
+    else {
+        changeFirstTime(player)
+    }
+}
+
+function changeDisplayText(player) {
+    if (checkWin(origBoard, player) || checkTie()) {
+        currentTurnText.innerHTML = "Game Over!";
+    } else {
+        currentTurnText.innerHTML = player === aiPlayer ? playerName + "'s Turn" : "AI's Turn";
     }
 }
 
 function checkWin(board, player) {
-	let plays = board.reduce((a, e, i) =>
-		(e === player) ? a.concat(i) : a, []);
-	let gameWon = null;
-	for (let [index, win] of winCombos.entries()) {
-		if (win.every(elem => plays.indexOf(elem) > -1)) {
-			gameWon = {index: index, player: player};
-			break;
-		}
-	}
-	return gameWon;
-}
-
-
-function gameOver(gameWon) {
-	for (let index of winCombos[gameWon.index]) {
-		document.getElementById(index).style.backgroundColor =
-			gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
-	}
-	for (var i = 0; i < cells.length; i++) {
-		cells[i].removeEventListener('click', turnClick, false);
-	}
-	declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose!");
-    document.querySelector("#play-again").style.display = "inline"
-    document.querySelector("#go-back").style.display = "inline"
-}
-
-function declareWinner(who) {
-	document.querySelector(".endgame").style.display = "block";
-	document.querySelector(".endgame .text").innerText = who;
-}
-
-function emptySquares() {
-	return origBoard.filter(s => typeof s == 'number');
-}
-
-function bestSpot() {
-	return minimax(origBoard,0,-10000, 10000, aiPlayer).index;
+    let plays = board.reduce((a, e, i) =>
+        (e === player) ? a.concat(i) : a, []);
+    let gameWon = null;
+    for (let [index, win] of winCombos.entries()) {
+        if (win.every(elem => plays.indexOf(elem) > -1)) {
+            gameWon = { index: index, player: player };
+            break;
+        }
+    }
+    return gameWon;
 }
 
 function checkTie() {
-	if (emptySquares().length == 0) {
-		for (var i = 0; i < cells.length; i++) {
-			cells[i].style.backgroundColor = "none";
-			cells[i].removeEventListener('click', turnClick, false);
-		}
-		declareWinner("Tie Game!")
-        document.querySelector("#play-again").style.display = "inline"
-        document.querySelector("#go-back").style.display = "inline"
-		return true;
-	}
-	return false;
+    if (emptySquares().length != 0) {
+        return false;
+    }
+    else {
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].style.backgroundColor = "none";
+            cells[i].removeEventListener('click', turnClick, false);
+        }
+        declareWinner("Tie Game!")
+        bg.style.display = "none";
+
+        return true;
+    }
 }
 
-function evaluateBoard(board,depth, player) {
-    if (checkWin(board, huPlayer)) {
-        return -20+depth;
-    } else if (checkWin(board, aiPlayer)) {
-        return 20-depth;
-    } else if (emptySquares(board).length === 0) {
-        return 0;
+function gameOver(gameWon) {
+    for (let index of winCombos[gameWon.index]) {
+        document.getElementById(index).style.backgroundColor =
+            gameWon.player == huPlayer ? "#08D9D6" : "#08D9D6";
     }
-	
-    return 0;
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].removeEventListener('click', turnClick, false);
+    }
+    bg.style.display = "none";
+    declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose!");
 }
 
+function declareWinner(who) {
+    endGame.style.display = "block";
+    document.querySelector(".endgame .text").innerText = who;
+    isFirstGame = false;
+}
 
-function minimax(newBoard,depth,alpha,beta ,player) {
-    var availSpots = emptySquares(newBoard);
-
-    if (checkWin(newBoard, huPlayer) || checkWin(newBoard, aiPlayer) || availSpots.length === 0) {
-        return { score: evaluateBoard(newBoard,depth, aiPlayer) };
-    }
-
-    var moves = [];
-	
-    for (var i = 0; i < availSpots.length; i++) {
-        var move = {};
-        move.index = newBoard[availSpots[i]];
-        newBoard[availSpots[i]] = player;
-
-        var result = minimax(newBoard,depth+1,alpha,beta, player === aiPlayer ? huPlayer : aiPlayer);
-        move.score = result.score;
-
-        newBoard[availSpots[i]] = move.index;
-
-        moves.push(move);
-        if (player === aiPlayer) {
-            alpha = Math.max(alpha, move.score);
-        } else {
-            beta = Math.min(beta, move.score);
-        }
-
-        if (alpha >= beta) {
-            break; 
-        }
-    }
-
-    var bestMove;
-
-    var bestScore = player === aiPlayer ? -Infinity : Infinity;
-
-    for (var i = 0; i < moves.length; i++) {
-        if ((player === aiPlayer && moves[i].score > bestScore) || (player === huPlayer && moves[i].score < bestScore)) {
-            bestScore = moves[i].score;
-            bestMove=i;
-        }
-    }
-
-    return moves[bestMove];
+function emptySquares() {
+    return origBoard.filter(s => typeof s == 'number');
 }

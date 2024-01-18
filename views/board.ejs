@@ -1,37 +1,44 @@
 <%- include('includes/head.ejs') %>
 
     <link rel="stylesheet" href="/css/board.css">
-</head>
-<body>
-    <div class="container">
-        <div class="turn-container">
-            <h3>TIC TAC TOE</h3>
-            <div class="turn-box align">X</div>
-            <div class="turn-box align">O</div>
-            <div class="bg"></div>
-        </div>
+    </head>
 
-        <h2 id="playerNameDisplay" class="player-name-display">Player: <%= playerName %></h2>
+    <body>
+        <section class="main_section">
+            <div class="container">
+                <div class="turn-container">
+                    <h3>TIC TAC TOE</h3>
+                    <div class="turn-box align">X</div>
+                    <div class="turn-box align">O</div>
+                    <div class="bg"></div>
+                </div>
 
-        <div class="main-grid">
-            <% for (let i = 0; i < 9; i++) { %>
-                <div class="box align" id="<%= i %>"></div>
-            <% } %>
-        </div>
-        <!--<h2 id="results"></h2>-->
-        <div class="endgame">
-            <div class="text"></div>
-        </div>
-        <div class="buttons">
-            <button id="play-again" onclick="startGame()">Play Again</button>
-            <button id="go-back" ><a href="/" style="text-decoration: none;">Go Back</a></button>
-        </div>
-    </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var symbol= <%- JSON.stringify(symbolOfPlayer) %> ;
-        var symbol1= <%- JSON.stringify(symbolOfPlayer1) %> ;
-        var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
-    </script>
-    <script src="/js/board.js"></script>
-    <%- include('includes/end.ejs') %>
+                <h2 id="playerNameDisplay" class="player-name-display">
+                    <%= playerName %>'s turn
+                </h2>
+
+                <div class="main-grid">
+                    <% for (let i=0; i < 9; i++) { %>
+                        <div class="box align" id="<%= i %>"></div>
+                        <% } %>
+                </div>
+                <div class="endgame">
+                    <div class="text"></div>
+                </div>
+                <div class="buttons">
+                    <button id="play-again" onclick="startGame()">Play Again</button>
+                    <a id="go-back" href="/" style="text-decoration: none;">Go Back</a>
+                </div>
+            </div>
+        </section>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var playerName = <%- JSON.stringify(playerName) %> ;
+            var humanSymbol = <%- JSON.stringify(humanPlayer) %> ;
+            var aiSymbol = <%- JSON.stringify(aiPlayer) %> ;
+            var isPcTurn = <%- JSON.stringify(isPcTurn) %> ;
+        </script>
+
+
+        <script src="/js/board.js"></script>
+        <%- include('includes/end.ejs') %>
