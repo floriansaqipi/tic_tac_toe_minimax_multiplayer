@@ -58,7 +58,7 @@ If you wanna see the source code and run it locally:
 - Frontend Team Member: [Blerta Krasniqi](https://github.com/BlerttaKrasniqi)
 - Frontend Team Member: [Festim Krasniqi](https://github.com/FestimKrasniqi)
 - Frontend Team Member: [Dina Pirana](https://github.com/dinapirana)
-- QA: [Ardi Zariqi](https://github.com/ArdiZariqi)
+- QA/Backend Team Member: [Ardi Zariqi](https://github.com/ArdiZariqi)
 - DevOps: [Dion Dauti](https://github.com/Dion-Dauti)
 
 ## Acknowledgments
